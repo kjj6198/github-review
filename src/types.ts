@@ -1,3 +1,9 @@
+export interface GithubSearchResponse<T> {
+  search: {
+    issueCount: number;
+    edges: T;
+  };
+}
 export interface GithubUser {
   id: string;
   name: string;

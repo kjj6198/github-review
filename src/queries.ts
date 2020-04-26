@@ -36,6 +36,14 @@ export const COUNT_QUERY = gql`
   query CountQuery($query: String!) {
     search(type: ISSUE, first: 100, query: $query) {
       issueCount
+      edges {
+        node {
+          ... on PullRequest {
+            id
+            title
+          }
+        }
+      }
     }
   }
 `;
