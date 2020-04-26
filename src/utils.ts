@@ -74,3 +74,25 @@ export function genColor(i: number) {
 
   return colors[i];
 }
+
+export async function takeScreenshot() {
+  const html2canvas = await import(
+    /* webpackChunkName: "html2canvas" */ "html2canvas"
+  );
+  const canvas = await html2canvas.default(document.body);
+  return canvas;
+}
+
+export function download(content: string | Blob, filename: string) {
+  const a = document.createElement("a");
+  a.style.display = "none";
+  document.body.appendChild(a);
+
+  if (content instanceof Blob) {
+    const url = URL.createObjectURL(content);
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+}

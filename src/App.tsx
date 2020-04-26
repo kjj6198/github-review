@@ -10,7 +10,7 @@ import countCommits, { countComments } from "./calculator/countCommit";
 import countContribution from "./calculator/countContribution";
 import styled from "styled-components";
 import { useTranslation } from "./components/LanguageProvider";
-import { genColor } from "./utils";
+import { genColor, takeScreenshot, download } from "./utils";
 
 const client = new ApolloClient({
   uri: "https://api.github.com/graphql",
@@ -44,6 +44,18 @@ function App() {
         <button onClick={() => setLanguage("jp")}>日本語</button>
         <button onClick={() => setLanguage("zh-TW")}>繁體中文</button>
         <button onClick={() => setLanguage("en")}>English</button>
+        <button
+          onClick={async () => {
+            const canvas = await takeScreenshot();
+            canvas.toBlob((blob) => {
+              if (blob) {
+                download(blob, "screenshot.png");
+              }
+            });
+          }}
+        >
+          Take screenshot
+        </button>
         <Search
           onClick={(node) => {
             if (!users.has(node.id)) {
