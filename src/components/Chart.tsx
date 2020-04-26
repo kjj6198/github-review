@@ -4,7 +4,7 @@ import GithubAvatar from "./GithubAvatar";
 import Box from "./Box";
 import styled from "styled-components";
 import UserChart from "./UserChart";
-import { buildScale, findMinMax } from "../utils";
+import { buildScale, findMinMax, genColor } from "../utils";
 
 type QueryFn = (user: GithubUser) => string;
 type Props = {
@@ -56,12 +56,13 @@ const Chart: React.FC<Props> = ({
       <h3>{title}</h3>
       <p>{description}</p>
       <div ref={chartRef}>
-        {users.map((u) => (
+        {users.map((u, i) => (
           <Wrapper key={u.id}>
             <GithubAvatar login={u.login} avatarUrl={u.avatarUrl} />
             <UserChart
               user={u}
               countBy={calculateFn}
+              color={genColor(i)}
               scale={scale}
               query={query}
               calculateFn={calculateFn}

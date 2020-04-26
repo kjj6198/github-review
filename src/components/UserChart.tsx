@@ -15,11 +15,12 @@ const Bar = styled.div<{ barWidth: number }>`
   height: 10px;
   margin-right: 3px;
   /* left some space to add text */
-  max-width: calc(100% - 150px);
+  max-width: calc(100% - 80px);
   width: ${(props) => props.barWidth * 100}%;
   background-color: #aaa;
   will-change: width;
   transition: 0.6s ease-in-out width;
+  background-image: linear-gradient(90deg, #fff, ${(props) => props.color});
 `;
 
 type QueryFn = (user: GithubUser) => string;
@@ -28,6 +29,7 @@ type Props = {
   scale: (value: number) => number;
   countBy: any;
   query?: QueryFn;
+  color?: string;
   onDataLoaded?: (data: any, count: number) => void;
   useCountQuery?: boolean;
   calculateFn: any;
@@ -50,6 +52,7 @@ const UserChart: React.FC<Props> = ({
   query,
   useCountQuery,
   calculateFn,
+  color,
 }) => {
   const [count, setCount] = useState(0);
   const { loading, data } = useQuery<GithubSearchResponse<GithubUser[]>>(
@@ -80,7 +83,7 @@ const UserChart: React.FC<Props> = ({
 
   return (
     <ChartContainer>
-      <Bar barWidth={scale(count)} />
+      <Bar color={color} barWidth={scale(count)} />
       <span>{formatNumber(count)}</span>
     </ChartContainer>
   );
