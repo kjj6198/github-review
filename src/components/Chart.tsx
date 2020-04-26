@@ -5,6 +5,7 @@ import Box from "./Box";
 import styled from "styled-components";
 import UserChart from "./UserChart";
 import { buildScale, findMinMax, genColor } from "../utils";
+import { useTranslation } from "./LanguageProvider";
 
 type QueryFn = (user: GithubUser) => string;
 type Props = {
@@ -38,6 +39,7 @@ const Chart: React.FC<Props> = ({
     Map<string, { edges: { node: PullRequest }[] }>
   >(new Map());
   const [counts, setCount] = useState<number[]>([]);
+  const { t } = useTranslation();
 
   const scale = useMemo(() => {
     const max = findMinMax(counts).max;
@@ -82,7 +84,7 @@ const Chart: React.FC<Props> = ({
         ))}
       </div>
       <section>
-        <h4>查看細節</h4>
+        <h4>{t("common.detail")}</h4>
         {Array.from(data).map(([key, val]) => {
           return (
             <details style={{ maxHeight: "200px", overflowY: "scroll" }}>

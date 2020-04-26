@@ -57,3 +57,20 @@ export function createTranslation(lang: string, translation: any) {
     return string;
   };
 }
+
+export function genColor(i: number) {
+  const colors = [
+    "#393b79",
+    "#d6616b",
+    "#843c39",
+    "#8c6d31",
+    "#637938",
+    "#e7ba52",
+    "#637939",
+    "#9c9ede",
+    "#ce6dbd",
+    "#7b4173",
+  ];
+
+  return colors[i];
+}

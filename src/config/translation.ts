@@ -1,5 +1,8 @@
 const translation = {
   "zh-TW": {
+    common: {
+      detail: "查看細節",
+    },
     long_time: {
       name: "🧐 搾時 Pull Request",
       description: "超過 {0} 天以上未 merged",
@@ -35,6 +38,9 @@ const translation = {
     },
   },
   ja: {
+    common: {
+      detail: "詳細を見る",
+    },
     long_time: {
       name: "🧐 長時間プルリク",
       description: "三日間以上過ぎてマージされていない",
@@ -70,6 +76,9 @@ const translation = {
     },
   },
   jp: {
+    common: {
+      detail: "詳細を見る",
+    },
     long_time: {
       name: "🧐 長時間プルリク",
       description: "三日間以上過ぎてマージされていない",
@@ -105,6 +114,9 @@ const translation = {
     },
   },
   en: {
+    common: {
+      detail: "Details",
+    },
     long_time: {
       name: "🧐 Long Time Pull Request",
       description: "Pull Reqeust that merged after created more than 3 days",

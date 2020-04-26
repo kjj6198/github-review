@@ -10,6 +10,7 @@ import countCommits, { countComments } from "./calculator/countCommit";
 import countContribution from "./calculator/countContribution";
 import styled from "styled-components";
 import { useTranslation } from "./components/LanguageProvider";
+import { genColor } from "./utils";
 
 const client = new ApolloClient({
   uri: "https://api.github.com/graphql",
@@ -33,11 +34,14 @@ const ChartWrapper = styled.div`
 
 function App() {
   const [users, setUser] = useState<Map<string, GithubUser>>(new Map());
-  const { t } = useTranslation();
+  const { t, setLanguage } = useTranslation();
 
   return (
     <ApolloProvider client={client}>
       <Container>
+        <button onClick={() => setLanguage("jp")}>日本語</button>
+        <button onClick={() => setLanguage("zh-TW")}>繁體中文</button>
+        <button onClick={() => setLanguage("en")}>English</button>
         <Search
           onClick={(node) => {
             if (!users.has(node.id)) {
@@ -49,8 +53,19 @@ function App() {
           }}
         />
         <div>
-          {Array.from(users).map(([key, user]) => (
-            <div key={key}>{user.name}</div>
+          {Array.from(users).map(([key, user], i) => (
+            <div key={key}>
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "10px",
+                  height: "10px",
+                  borderRadius: "50%",
+                  backgroundColor: genColor(i),
+                }}
+              ></span>
+              {user.name}
+            </div>
           ))}
         </div>
         <ChartWrapper>
@@ -101,7 +116,7 @@ function App() {
 
           <Chart
             users={Array.from(users.values())}
-            title={t("comments.title")}
+            title={t("comments.name")}
             description={t("comments.description")}
             query={(user) => `is:merged is:pr author:${user.login}`}
             calculateFn={countComments}
