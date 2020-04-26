@@ -58,7 +58,7 @@ interface GraphQLResponse<T> {
 const Search: React.FC<{ onClick?: (node: GithubUser) => void }> = ({
   onClick,
 }) => {
-  const [getUser, { loading, data, error }] = useLazyQuery<{
+  const [getUser, { data, error }] = useLazyQuery<{
     search: GraphQLResponse<GithubUser>;
   }>(GITHUB_USER_QUERY);
   const timer = useRef<number | null>(null);

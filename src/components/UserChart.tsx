@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
-import { GithubUser } from "../types";
+import { GithubUser, GithubSearchResponse } from "../types";
 import LoadingCircle from "./LoadingCircle";
+import { COUNT_QUERY, PULL_REQUESTS_QUERY } from "../queries";
 
 const ChartContainer = styled.div`
   flex: 1;
@@ -15,7 +15,8 @@ const Bar = styled.div<{ barWidth: number }>`
   height: 10px;
   margin-right: 3px;
   /* left some space to add text */
-  width: calc(${(props) => props.barWidth * 100}% - 100px);
+  max-width: calc(100% - 150px);
+  width: ${(props) => props.barWidth * 100}%;
   background-color: #aaa;
   will-change: width;
   transition: 0.6s ease-in-out width;
@@ -31,49 +32,6 @@ type Props = {
   useCountQuery?: boolean;
   calculateFn: any;
 };
-
-const COUNT_QUERY = gql`
-  query CountQuery($query: String!) {
-    search(type: ISSUE, first: 100, query: $query) {
-      issueCount
-    }
-  }
-`;
-
-const PULL_REQUESTS_QUERY = gql`
-  query GetPullRequestsByQuery($query: String!, $after: String) {
-    search(type: ISSUE, first: 100, query: $query, after: $after) {
-      issueCount
-      edges {
-        node {
-          ... on PullRequest {
-            id
-            title
-            createdAt
-            mergedAt
-            deletions
-            additions
-            merged
-            milestone {
-              id
-              title
-            }
-            comments {
-              totalCount
-            }
-            commits {
-              totalCount
-            }
-          }
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-    }
-  }
-`;
 
 const NUMBER_REG = /(\d)(?=(\d{3})+(?!\d))/g;
 const DELIMITER = ",";
@@ -94,7 +52,7 @@ const UserChart: React.FC<Props> = ({
   calculateFn,
 }) => {
   const [count, setCount] = useState(0);
-  const { loading, data, refetch } = useQuery(
+  const { loading, data } = useQuery<GithubSearchResponse<GithubUser[]>>(
     useCountQuery ? COUNT_QUERY : PULL_REQUESTS_QUERY,
     {
       variables: {
@@ -114,7 +72,7 @@ const UserChart: React.FC<Props> = ({
         onDataLoaded(data.search, count);
       }
     }
-  }, [loading, data]);
+  }, [loading, data, useCountQuery, calculateFn]);
 
   if (!user || loading || !data) {
     return <LoadingCircle width={15} />;

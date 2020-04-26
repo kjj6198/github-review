@@ -1,5 +1,5 @@
 import React, { useRef, useState, useMemo } from "react";
-import { GithubUser } from "../types";
+import { GithubUser, PullRequest } from "../types";
 import GithubAvatar from "./GithubAvatar";
 import Box from "./Box";
 import styled from "styled-components";
@@ -9,6 +9,7 @@ import { buildScale, findMinMax } from "../utils";
 type QueryFn = (user: GithubUser) => string;
 type Props = {
   title: string;
+  description: string;
   users: GithubUser[];
   calculateFn?: any;
   query?: QueryFn;
@@ -30,8 +31,12 @@ const Chart: React.FC<Props> = ({
   calculateFn,
   query,
   useCountQuery,
+  description,
 }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
+  const [data, setData] = useState<
+    Map<string, { edges: { node: PullRequest }[] }>
+  >(new Map());
   const [counts, setCount] = useState<number[]>([]);
 
   const scale = useMemo(() => {
@@ -49,6 +54,7 @@ const Chart: React.FC<Props> = ({
   return (
     <Box>
       <h3>{title}</h3>
+      <p>{description}</p>
       <div ref={chartRef}>
         {users.map((u) => (
           <Wrapper key={u.id}>
@@ -60,13 +66,33 @@ const Chart: React.FC<Props> = ({
               query={query}
               calculateFn={calculateFn}
               useCountQuery={useCountQuery}
-              onDataLoaded={(data, count) =>
-                setCount((c) => [...c, useCountQuery ? data.issueCount : count])
-              }
+              onDataLoaded={(data, count) => {
+                setCount((c) => [
+                  ...c,
+                  useCountQuery ? data.issueCount : count,
+                ]);
+                setData((d) => {
+                  d.set(u.login, data);
+                  return new Map(d);
+                });
+              }}
             />
           </Wrapper>
         ))}
       </div>
+      <section>
+        <h4>查看細節</h4>
+        {Array.from(data).map(([key, val]) => {
+          return (
+            <details style={{ maxHeight: "200px", overflowY: "scroll" }}>
+              <summary>{key}</summary>
+              {val.edges.map(({ node }) => (
+                <p>{node.title}</p>
+              ))}
+            </details>
+          );
+        })}
+      </section>
     </Box>
   );
 };

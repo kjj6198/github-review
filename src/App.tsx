@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import Search from "./components/Search";
-import options from "./config/options";
-import ReviewOption from "./components/ReviewOptions";
 import { GithubUser } from "./types";
 import Chart from "./components/Chart";
 import countLongTimePR from "./calculator/countLongTimePR";
@@ -11,6 +9,7 @@ import countCriticizingPR from "./calculator/countCriticizingPR";
 import countCommits, { countComments } from "./calculator/countCommit";
 import countContribution from "./calculator/countContribution";
 import styled from "styled-components";
+import { useTranslation } from "./components/LanguageProvider";
 
 const client = new ApolloClient({
   uri: "https://api.github.com/graphql",
@@ -34,6 +33,7 @@ const ChartWrapper = styled.div`
 
 function App() {
   const [users, setUser] = useState<Map<string, GithubUser>>(new Map());
+  const { t } = useTranslation();
 
   return (
     <ApolloProvider client={client}>
@@ -65,53 +65,61 @@ function App() {
         <ChartWrapper>
           <Chart
             users={Array.from(users.values())}
-            title={options.LONG_TIME_PR.name}
+            title={t("long_time.name")}
+            description={t("long_time.description", 10)}
             calculateFn={countLongTimePR}
           />
           <Chart
             users={Array.from(users.values())}
-            title={options.CREATED.name}
+            title={t("created.name")}
+            description={t("created.description")}
             query={(user) => `author:${user.login} is:merged is:pr`}
             useCountQuery
           />
           <Chart
             users={Array.from(users.values())}
-            title={options.REQUESTED.name}
+            title={t("requested.name")}
+            description={t("requested.description")}
             query={(user) => `is:merged is:pr review-requested:${user.login}`}
             useCountQuery
           />
 
           <Chart
             users={Array.from(users.values())}
-            title={options.REVIEWED.name}
+            title={t("reviewed.name")}
+            description={t("reviewed.description")}
             query={(user) => `is:merged is:pr reviewed-by:${user.login}`}
             useCountQuery
           />
 
           <Chart
             users={Array.from(users.values())}
-            title={options.CRITICIZING.name}
+            title={t("criticizing.name")}
+            description={t("criticizing.description")}
             query={(user) => `is:merged is:pr author:${user.login}`}
             calculateFn={countCriticizingPR}
           />
 
           <Chart
             users={Array.from(users.values())}
-            title={options.COMMITS.name}
+            title={t("commits.name")}
+            description={t("commits.description")}
             query={(user) => `is:merged is:pr author:${user.login}`}
             calculateFn={countCommits}
           />
 
           <Chart
             users={Array.from(users.values())}
-            title={options.COMMENTS.name}
+            title={t("comments.title")}
+            description={t("comments.description")}
             query={(user) => `is:merged is:pr author:${user.login}`}
             calculateFn={countComments}
           />
 
           <Chart
             users={Array.from(users.values())}
-            title={options.CONTRIBUTION.name}
+            title={t("contribution.name")}
+            description={t("contribution.description")}
             query={(user) => `is:merged is:pr author:${user.login}`}
             calculateFn={countContribution}
           />
