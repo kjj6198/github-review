@@ -17,6 +17,8 @@ const client = new ApolloClient({
   headers: {
     Authorization: `Bearer ${process.env.GITHUB_ACCESS_TOKEN}`,
   },
+  // TODO: handle error
+  onError: (error) => console.log(error),
 });
 
 const Container = styled.div`

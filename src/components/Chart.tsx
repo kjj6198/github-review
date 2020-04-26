@@ -87,7 +87,10 @@ const Chart: React.FC<Props> = ({
         <h4>{t("common.detail")}</h4>
         {Array.from(data).map(([key, val]) => {
           return (
-            <details style={{ maxHeight: "200px", overflowY: "scroll" }}>
+            <details
+              key={key}
+              style={{ maxHeight: "200px", overflowY: "scroll" }}
+            >
               <summary>{key}</summary>
               {val.edges.map(({ node }) => (
                 <p>{node.title}</p>
