@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import Search from "./components/Search";
@@ -37,7 +37,7 @@ function App() {
 
   return (
     <ApolloProvider client={client}>
-      <Container className="App">
+      <Container>
         <Search
           onClick={(node) => {
             if (!users.has(node.id)) {
@@ -53,15 +53,6 @@ function App() {
             <div key={key}>{user.name}</div>
           ))}
         </div>
-        {/* <div>
-          {Object.keys(options).map((key) => (
-            <ReviewOption
-              key={key}
-              name={options[key].name}
-              description={options[key].description}
-            />
-          ))}
-        </div> */}
         <ChartWrapper>
           <Chart
             users={Array.from(users.values())}
